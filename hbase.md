@@ -1,4 +1,6 @@
-[markdown-toc]
+<font size=10> Contents </font>
+[toc]
+
 # 一、hbase架构 #
   物理上看, HBase系统有3种类型的后台服务程序, 分别是Region server, Master server 和 zookeeper.
 
