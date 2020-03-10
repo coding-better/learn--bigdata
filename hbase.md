@@ -11,7 +11,7 @@
 
 但是, 如果是一个新迁移来的Region server, 这个region server的数据并没有本地副本. 直到HBase运行compaction, 才会把一个副本迁移到本地的Datanode上面.
 
-![preview](./img/hbase/hbase架构.jpg)
+![text](./img/hbase/hbase架构.jpg)
 
 
 
@@ -19,7 +19,7 @@
 
 HBase的表根据Row Key的区域分成多个Region, 一个Region包含这这个区域内所有数据. 而Region server负责管理多个Region, 负责在这个Region server上的所有region的读写操作. 一个Region server最多可以管理1000个region.
 
-![preview](./img/hbase/hbase-region-server.jpg)
+![text](./img/hbase/hbase-region-server.jpg)
 ## HBase Master server ##
 HBase Maste主要负责分配region和操作DDL(如新建和删除表)等,
 
@@ -29,17 +29,17 @@ HBase Master的功能:
 * 管控集群, 监控所有RegionServer的状态
 * 提供DDL相关的API, 新建(create),删除(delete)和更新(update)表结构.
 
-![preview](./img/hbase/hbase-master-server.jpg)
+![text](./img/hbase/hbase-master-server.jpg)
 ## ZooKeeper: 集群"物业"管理员 ##
 Zookeepper是一个分布式的无中心的元数据存储服务. zookeeper探测和记录HBase集群中服务器的状态信息. 如果zookeeper发现服务器宕机, 它会通知Hbase的master节点. 在生产环境部署zookeeper至少需要3台服务器, 用来满足zookeeper的核心算法Paxos的最低要求.
 
-![preview](./img/hbase/hbase-zookeeper.jpg)
+![text](./img/hbase/hbase-zookeeper.jpg)
 
 如图, zookeeper有三台服务器, region server和master节点都通过heartbeat的方式向zookeeper报告状态
 ## ZooKeeper, Master和 Region server协同工作 ##
 Zookeepr负责维护集群的memberlist, 哪台服务器在线,哪台服务器宕机都由zookeeper探测和管理. Region server, 主备Master节点主动连接Zookeeper, 维护一个Session连接,这个session要求定时发送heartbeat, 向zookeeper说明自己在线, 并没有宕机.
 
-![preview](./img/hbase/zookeeper-master-region.jpg)
+![text](./img/hbase/zookeeper-master-region.jpg)
 
 ZooKeeper有一个Ephemeral Node(临时节点)的概念, session连接在zookeeper中建立一个临时节点(Ephemeral Node), 如果这个session断开, 临时节点被自动删除.
 
@@ -68,7 +68,7 @@ HBase的访问流程:
 
 如果region server由于宕机等原因迁移到其他服务器. Hbase客户端访问失败, 客户端缓存过期, 再重新访问zookeeper, 得到最新的meta table位置, 更新缓存.
 
-![preview](./img/hbase/read-hbase.jpg)
+![text](./img/hbase/read-hbase.jpg)
 ## HBase Meta Table ##
 Meta table存储所有region的列表
 
@@ -79,7 +79,7 @@ Meta table的结构如下:
 - Key: region的开始row key, region id
 - Values: Region server
 
-![preview](./img/hbase/hbase-mate-table.jpg)
+![text](./img/hbase/hbase-mate-table.jpg)
 
 ## Region Server的结构 ##
 Region Server运行在HDFS的data node上面, 它有下面4个部分组成:
@@ -89,7 +89,7 @@ Region Server运行在HDFS的data node上面, 它有下面4个部分组成:
 * MemStore: 写入缓存, 在数据真正被写入硬盘前, Memstore在内存中缓存新写入的数据. 每个region的每个列簇(column family)都有一个memstore. memstore的数据在写入硬盘前, 会先根据key排序, 然后写入硬盘.
 * HFiles: HDFS上的数据文件, 里面存储KeyValue对.
 
-![preview](./img/hbase/region-server.jpg)
+![text](./img/hbase/region-server.jpg)
 
 # 三、HBase的写入流程 #
 ## 1.将数据写入memstore中 ##
@@ -99,13 +99,13 @@ Region Server运行在HDFS的data node上面, 它有下面4个部分组成:
 * 将修改的操作记录在预写日志(WAL)的末尾
 * 预写日志(WAL)被用来在region server崩溃时, 恢复memstore中的数据
 
-![preview](./img/hbase/put-wal.jpg)
+![text](./img/hbase/put-wal.jpg)
 
 ​                                              WAL总写入到文件末尾, 是顺序写入, 写入速度较快
 
 **1.2、数据写入预写日志(WAL), 并存储在memstore之后, 向用户返回写成功.**
 
-  ![preview](./img/hbase/put-memstore.jpg)
+  ![text](./img/hbase/put-memstore.jpg)
 ### HBase MemStore ###
 
 MemStore在内存按照Key的顺序, 存储Key-Value对, 一个Memstore对应一个列簇(column family). 同样在HFile里面, 所有的Key-Value对也是根据Key有序存储.
