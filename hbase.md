@@ -110,7 +110,7 @@ Region Server运行在HDFS的data node上面, 它有下面4个部分组成:
 
 MemStore在内存按照Key的顺序, 存储Key-Value对, 一个Memstore对应一个列簇(column family). 同样在HFile里面, 所有的Key-Value对也是根据Key有序存储.
 
-![preview](./img/hbase/memstore.jpg)
+![text](./img/hbase/memstore.jpg)
 
 ## 2.HBase Region Flush ##
 
@@ -122,13 +122,13 @@ MemStore在内存按照Key的顺序, 存储Key-Value对, 一个Memstore对应一
 
 在region server启动后, 读取所有HFile中最高的序列号, 新的写入序列号从这个最高序列号继续向上累加.
 
-![img](./img/hbase/region-flush.jpg)
+![text](./img/hbase/region-flush.jpg)
 
 ### HBase HFile ###
 
 HFile中存储有序的Key-Value对. 当Memstore满了之后, Memstore中的所有数据写入HDFS中,形成一个新的HFile. 这种大文件写入是顺序写, 因为避免了机械硬盘的磁头移动, 所以写入速度非常快.
 
-![img](./img/hbase/Hfile.jpg)
+![text](./img/hbase/Hfile.jpg)
 #### HBase HFile Structure ####
 HFile存储了一个多级索引(multi-layered index), 查询请求不需要遍历整个HFile查询数据, 通过多级索引就可以快速得到数据(工作机制类似于b+tree)
 
@@ -140,12 +140,12 @@ HFile存储了一个多级索引(multi-layered index), 查询请求不需要遍�
 
 尾部指针(trailer pointer)在HFile的最末尾, 它指向元数据块区(meta block), 布隆过滤器区域和时间范围区域. 查询布隆过滤器可以很快得确定row key是否在HFile内, 时间范围区域也可以帮助查询跳过不在时间区域的读请求.
 
-![img](./img/hbase/布隆过滤器.jpg)
+![text](./img/hbase/布隆过滤器.jpg)
 #### HFile索引 ####
 
 当打开HFile后, 系统自动缓存HFile的索引在Block Cache里, 这样后续查找操作只需要一次硬盘的寻道.
 
-![preview](./img/hbase/hfile-index.jpg)
+![text](./img/hbase/hfile-index.jpg)
 
 
 ## 3.HBase Minor Compaction ##
@@ -156,7 +156,7 @@ HFile的合并采用归并排序的算法.
 
 *译注: 较少的HFile可以提高HBase的读性能*
 
-![preview](./img/hbase/hbase-minor-compaction.jpg)
+![text](./img/hbase/hbase-minor-compaction.jpg)
 
 ## 4.HBase Major Compaction ##
 
@@ -170,7 +170,7 @@ Major compaction可以被调度成自动运行的模式, 但是由于写放大�
 
 如果集群内还有其他region server, master节点倾向于做负载均衡, 所以master节点有可能调度新的region到其他region server, 由其他region管理新的分裂出的region.
 
-![img](./img/hbase/Region的拆分.jpg)
+![text](./img/hbase/Region的拆分.jpg)
 
 
 # 四、HBase的混合读(Read Merge) #
@@ -181,11 +181,11 @@ Major compaction可以被调度成自动运行的模式, 但是由于写放大�
 2. 其次, 在memstore(写cache)里查找cell, memstore里面存储里最近的新写入, 如果找到就返回, 没有找到就执行下一步
 3. 最后, 在读写cache中都查找失败的情况下, HBase查询Block cache里面的Hfile索引和布隆过滤器, 查询有可能存在这个cell的HFile, 最后在HFile中找到数据.
 
-![preview](./img/hbase/hbase-read-merge.jpg)
+![text](./img/hbase/hbase-read-merge.jpg)
 
 # 五、Hbase表设计 #
 ## 1、总体原则 ##
-![preview](./img/hbase/hbase总体设计原则.png)
+![text](./img/hbase/hbase总体设计原则.png)
 
 
 ## 2、表设计 ##
